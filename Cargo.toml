@@ -2,3 +2,16 @@
 name = "presql"
 version = "0.1.0"
 authors = ["Bruno Dupuis <bruno.dupuis@novapost.fr>"]
+
+[lib]
+name = "presql"
+path = "src/lib.rs"
+
+[[bin]]
+name = "quick_test"
+path = "src/main.rs"
+
+[dependencies]
+regex = "0.1.41"
+lazy_static = "0.1.*"
+#lazy = "0.5.3"
