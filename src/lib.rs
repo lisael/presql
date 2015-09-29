@@ -71,7 +71,7 @@ impl QueryRegistry {
 }
 
 #[macro_export]
-macro_rules! presql{
+macro_rules! query{
     ($alias: expr, $query: expr) => {{$crate::get( $alias , $query )}}
 }
 
@@ -104,6 +104,6 @@ fn test_register() {
 #[test]
 fn test_macro(){
     QueryRegistry::register("src/tests.sql", "test_alias");
-    assert_eq!(presql!("test_alias", "test_query1"),
+    assert_eq!(query!("test_alias", "test_query1"),
                "SELECT * FROM test_table".to_string());
 }
