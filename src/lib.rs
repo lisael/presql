@@ -46,8 +46,8 @@ impl QueryRegistry {
         data.insert(key, value);
     }
 
-    fn register(file_name: String, alias: String){
-        let mut f = match File::open(&file_name){
+    fn register(file_name: &str, alias: &str){
+        let mut f = match File::open(file_name){
              Err(_) => { panic!("Unable to open {}", file_name); },
              Ok(f) => {f},
         };
@@ -62,14 +62,14 @@ impl QueryRegistry {
         let regex_str = r"(?is)--\s*name:\s*(?P<key>\w+)\s*(?P<query>.+?);\n";
         let regex = Regex::new(regex_str).unwrap();
         for caps in regex.captures_iter(&(*s)){
-            let key = alias.clone();
+            let key = alias.to_string();
             let key = key + "/";
             QueryRegistry::set(key + caps.name("key").unwrap(),
                                caps.name("query").unwrap().to_string());
         }
     }
 }
-
+#[]
 macro_rules! presql{
     ($alias: expr, $query: expr) => {{$crate::get( $alias , $query )}}
 }
@@ -80,7 +80,7 @@ pub fn get(alias: &'static str, query: &'static str) -> String{
     QueryRegistry::get(format!("{}/{}", alias, query))
 }
 
-pub fn register(file_name: String, alias: String){
+pub fn register(file_name: &str, alias: &str){
     QueryRegistry::register(file_name, alias)
 }
 
@@ -93,7 +93,7 @@ fn test_get_set() {
 
 #[test]
 fn test_register() {
-    QueryRegistry::register("src/tests.sql".to_string(), "test_alias".to_string());
+    QueryRegistry::register("src/tests.sql", "test_alias");
     assert_eq!(get("test_alias", "test_query1"),
                "SELECT * FROM test_table".to_string());
     assert_eq!(QueryRegistry::get("test_alias/test_query2".to_string()),
@@ -102,7 +102,7 @@ fn test_register() {
 
 #[test]
 fn test_macro(){
-    QueryRegistry::register("src/tests.sql".to_string(), "test_alias".to_string());
+    QueryRegistry::register("src/tests.sql", "test_alias");
     assert_eq!(presql!("test_alias", "test_query1"),
                "SELECT * FROM test_table".to_string());
 }
