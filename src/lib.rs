@@ -69,7 +69,8 @@ impl QueryRegistry {
         }
     }
 }
-#[]
+
+#[macro_export]
 macro_rules! presql{
     ($alias: expr, $query: expr) => {{$crate::get( $alias , $query )}}
 }
